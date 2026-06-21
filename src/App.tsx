@@ -112,9 +112,8 @@ export default function App() {
       </div>
 
       {/* Subtle Micro-Telemetry Margin Lines Disclaimer */}
-      <footer className="h-8 bg-white border-t border-zinc-200 px-4 md:px-6 flex items-center justify-between text-[10px] text-zinc-400 font-mono select-none">
-        <span>UNITED REPUBLIC OF TANZANIA</span>
-        <span>© 2026 MINISTRY OF INVESTMENT, INDUSTRY & TRADE</span>
+      <footer className="h-8 bg-white border-t border-zinc-200 px-4 md:px-6 flex items-center justify-center text-[10px] text-zinc-400 font-mono select-none">
+        <span>© 2026 written by Ismail Hakim</span>
       </footer>
 
     </div>
