@@ -123,6 +123,8 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
     }
   ]);
   const [userInput, setUserInput] = useState<string>('');
+  const [isChatLoading, setIsChatLoading] = useState<boolean>(false);
+  const [chatError, setChatError] = useState<string | null>(null);
 
   // Document 30: Executive Decision Support parameter ranges
   const [dsCapex, setDsCapex] = useState<number>(280);
@@ -141,51 +143,51 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
     );
   }
 
-  // Handle Advisor Quick Prompt Trigger
-  const triggerAdvisorSample = (topic: string, queryText: string) => {
-    const userMsg = { sender: 'user' as const, text: queryText };
-    
-    let answer = "";
-    if (topic === 'entry') {
-      answer = `### 1. Market Entry Pathway (TIC Guidelines)
-- **TIC Registration:** Minimum initial capital target is USD 500,000 for foreign enterprises to qualify for the Certificate of Incentives.
-- **Corporate Registry:** File memorandum and establish physical office with BRELA.
-- **Tax Activation:** Establish TIN/VAT filings with the Tanzania Revenue Authority (TRA).
-- **NeST Registration:** Register under the 'International Bidding Entity' class for direct portal access.`;
-    } else if (topic === 'jv') {
-      answer = `### 2. Joint Venture Integration Protocols (PURA Rule 2017)
-- **Mandatory Local Equity:** Standard energy sub-contracts require minimum 51% equity holds by licensed domestic Tanzanian Class I contractors or suppliers.
-- **Skills Transfer Account:** Must establish a dedicated technical development log, providing structured training sequences for local engineers.
-- **Primary Board presence:** At least 50% of executive directors should reside in Tanzania.`;
-    } else if (topic === 'bid') {
-      answer = `### 3. Public Procurement Bidding Guide (NeST Platforms)
-- **Annual Plans (APP):** Monitored digitally to target tenders 3-6 months before release.
-- **Bid Guarantees:** Must be secured directly from commercial banking institutions licensed and regulated by the Bank of Tanzania (BoT).
-- **Technical Proposal weighting:** Average 75% for works. Focus heavy weight on CVs of ERB/AQRB active members.`;
-    } else {
-      answer = `### 4. LNG Pipeline & Liquid Infrastructure Projects
-- **Consortium Frameworks:** Major developers include Equinor, Shell, and TPDC.
-- **Local sourcing mandates:** Site preparation, concrete structural castings, and local logistics MUST be sourced directly via local Tier-1 vendors.
-- **NEMC clearances:** Strict environmental impact licenses must be pre-approved before trenching works begin near Coastal water streams.`;
+  const getAdvisorResponse = async (updatedMessages: Array<{ sender: 'advisor' | 'user', text: string }>) => {
+    setIsChatLoading(true);
+    setChatError(null);
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ messages: updatedMessages })
+      });
+      if (!response.ok) {
+        throw new Error('API request failed');
+      }
+      const data = await response.json();
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      setChatMessages(prev => [...prev, { sender: 'advisor', text: data.reply || data.text || "No response generated." }]);
+    } catch (err: any) {
+      console.error(err);
+      setChatError(err.message || 'Error occurred');
+      setChatMessages(prev => [...prev, { sender: 'advisor', text: 'An error occurred while fetching strategic advice. Please check your connection and try again.' }]);
+    } finally {
+      setIsChatLoading(false);
     }
-
-    const sysMsg = { sender: 'advisor' as const, text: answer };
-    setChatMessages(prev => [...prev, userMsg, sysMsg]);
   };
 
-  const handleSendChat = (e: React.FormEvent) => {
+  const triggerAdvisorSample = async (topic: string, queryText: string) => {
+    if (isChatLoading) return;
+    const userMsg = { sender: 'user' as const, text: queryText };
+    const nextMessages = [...chatMessages, userMsg];
+    setChatMessages(nextMessages);
+    await getAdvisorResponse(nextMessages);
+  };
+
+  const handleSendChat = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!userInput.trim()) return;
+    if (!userInput.trim() || isChatLoading) return;
 
     const userMsg = { sender: 'user' as const, text: userInput };
-    setChatMessages(prev => [...prev, userMsg]);
+    const nextMessages = [...chatMessages, userMsg];
+    setChatMessages(nextMessages);
     setUserInput('');
-
-    // Simulate smart compliant response
-    setTimeout(() => {
-      const response = `Based on your query regarding "${userMsg.text}": Under the Public Procurement Act, CAP 410, and Tanzanian local content regulations, all sovereign contracts require verification of national register indicators (CRB Class I for unlimited projects, ERB/AQRB certificates for design, and TRA compliance schedules). It is highly advised to configure a Joint Venture with a licensed local enterprise holding at least 25% or up to 51% domestic share to maximize your evaluation scores on the NeST portal. Let me know if you would like me to detail the step-by-step regulatory checkpoints!`;
-      setChatMessages(prev => [...prev, { sender: 'advisor' as const, text: response }]);
-    }, 600);
+    await getAdvisorResponse(nextMessages);
   };
 
   // Helper: Count checked items per section
@@ -1399,25 +1401,43 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
                     </div>
                   </div>
                 ))}
+                {isChatLoading && (
+                  <div className="flex justify-start">
+                    <div className="bg-white border border-zinc-200 text-zinc-400 p-3 rounded-lg rounded-bl-none shadow-sm flex items-center gap-1.5 italic">
+                      <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce"></span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce [animation-delay:0.2s]"></span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce [animation-delay:0.4s]"></span>
+                      Advisor is analyzing Tanzanian regulations...
+                    </div>
+                  </div>
+                )}
+                {chatError && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 p-3 rounded-lg text-[11px] leading-normal font-mono">
+                    ERROR: {chatError}
+                  </div>
+                )}
               </div>
 
               {/* Presets and entry quick queries */}
               <div className="p-3 border-t border-zinc-100 bg-zinc-50/50 flex flex-wrap gap-2">
                 <button 
                   onClick={() => triggerAdvisorSample('entry', 'How do I center target registrations to enter the market?')}
-                  className="px-2.5 py-2 md:py-1 bg-white hover:bg-zinc-100 text-xs text-zinc-700 border border-zinc-200 rounded cursor-pointer transition-colors min-h-[44px] md:min-h-0 flex items-center justify-center font-medium"
+                  disabled={isChatLoading}
+                  className="px-2.5 py-2 md:py-1 bg-white hover:bg-zinc-100 text-xs text-zinc-700 border border-zinc-200 rounded cursor-pointer transition-colors min-h-[44px] md:min-h-0 flex items-center justify-center font-medium disabled:opacity-50"
                 >
                   TIC Licenses
                 </button>
                 <button 
                   onClick={() => triggerAdvisorSample('jv', 'What are the rules regarding PURA Joint Ventures?')}
-                  className="px-2.5 py-2 md:py-1 bg-white hover:bg-zinc-100 text-xs text-zinc-700 border border-zinc-200 rounded cursor-pointer transition-colors min-h-[44px] md:min-h-0 flex items-center justify-center font-medium"
+                  disabled={isChatLoading}
+                  className="px-2.5 py-2 md:py-1 bg-white hover:bg-zinc-100 text-xs text-zinc-700 border border-zinc-200 rounded cursor-pointer transition-colors min-h-[44px] md:min-h-0 flex items-center justify-center font-medium disabled:opacity-50"
                 >
                   PURA Joint Ventures
                 </button>
                 <button 
                   onClick={() => triggerAdvisorSample('bid', 'How are bid security bonds validated?')}
-                  className="px-2.5 py-2 md:py-1 bg-white hover:bg-zinc-100 text-xs text-zinc-700 border border-zinc-200 rounded cursor-pointer transition-colors min-h-[44px] md:min-h-0 flex items-center justify-center font-medium"
+                  disabled={isChatLoading}
+                  className="px-2.5 py-2 md:py-1 bg-white hover:bg-zinc-100 text-xs text-zinc-700 border border-zinc-200 rounded cursor-pointer transition-colors min-h-[44px] md:min-h-0 flex items-center justify-center font-medium disabled:opacity-50"
                 >
                   NeST Bid Securities
                 </button>
@@ -1429,14 +1449,16 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
                   type="text" 
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
+                  disabled={isChatLoading}
                   placeholder="Ask advisor (e.g., minimum capital, tax reliefs)..."
-                  className="flex-1 bg-zinc-50 border border-zinc-200 rounded px-3 py-2 md:py-1.5 text-base md:text-xs text-zinc-800 outline-none focus:bg-white focus:border-zinc-900 min-h-[44px] md:min-h-0"
+                  className="flex-1 bg-zinc-50 border border-zinc-200 rounded px-3 py-2 md:py-1.5 text-base md:text-xs text-zinc-800 outline-none focus:bg-white focus:border-zinc-900 min-h-[44px] md:min-h-0 disabled:opacity-50"
                 />
                 <button 
                   type="submit"
-                  className="px-4 py-2 md:py-1.5 bg-zinc-900 text-white text-base md:text-xs font-mono font-bold rounded hover:bg-zinc-800 transition-colors cursor-pointer min-h-[44px] md:min-h-0 flex items-center justify-center"
+                  disabled={isChatLoading}
+                  className="px-4 py-2 md:py-1.5 bg-zinc-900 text-white text-base md:text-xs font-mono font-bold rounded hover:bg-zinc-800 transition-colors cursor-pointer min-h-[44px] md:min-h-0 flex items-center justify-center disabled:opacity-50"
                 >
-                  SEND
+                  {isChatLoading ? "LOADING" : "SEND"}
                 </button>
               </form>
             </div>
