@@ -22,12 +22,19 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
   const [isGeneratingPdf, setIsGeneratingPdf] = useState<boolean>(false);
 
   const handleExportPdf = async () => {
-    if (!pdfContentRef.current || isGeneratingPdf) return;
+    console.log('[DEBUG-PDF] Button click detected');
+    if (!pdfContentRef.current || isGeneratingPdf) {
+      console.log('[DEBUG-PDF] Export bypass requested. ref exists:', !!pdfContentRef.current, 'isGeneratingPdf:', isGeneratingPdf);
+      return;
+    }
+    console.log('[DEBUG-PDF] Export function entered');
     setIsGeneratingPdf(true);
 
     try {
       const element = pdfContentRef.current;
+      console.log('[DEBUG-PDF] Data loaded - element reference obtained successfully:', element);
 
+      // Handle input cloning
       const inputs = element.querySelectorAll('input[type="text"], input[type="number"]');
       inputs.forEach((input: any) => {
         input.setAttribute('value', input.value);
@@ -65,9 +72,33 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
         jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
       } as any;
 
-      await html2pdf().set(opt).from(element).save();
-    } catch (error) {
-      console.error(error);
+      console.log('[DEBUG-PDF] Configuration loaded:', opt);
+
+      // Defensively resolve html2pdf regardless of bundler wrapping
+      console.log('[DEBUG-PDF] Resolving html2pdf library export structure...');
+      let html2pdfFn: any = html2pdf;
+      if (html2pdfFn && (html2pdfFn as any).default) {
+        html2pdfFn = (html2pdfFn as any).default;
+      }
+      
+      if (!html2pdfFn || typeof html2pdfFn !== 'function') {
+        console.warn('[DEBUG-PDF] html2pdf statically imported is not a function. Trying dynamic import fallback...');
+        const dynamicModule: any = await import('html2pdf.js');
+        html2pdfFn = dynamicModule.default || dynamicModule;
+      }
+
+      if (typeof html2pdfFn !== 'function') {
+        throw new Error('html2pdf.js could not be resolved as a callable function.');
+      }
+
+      console.log('[DEBUG-PDF] PDF generated - invoking html2pdfFn worker stream');
+      console.log('[DEBUG-PDF] Download started');
+      
+      await (html2pdfFn() as any).set(opt).from(element).save();
+      
+      console.log('[DEBUG-PDF] Download completed successfully');
+    } catch (error: any) {
+      console.error('[DEBUG-PDF] PDF Export Error: ', error);
     } finally {
       setIsGeneratingPdf(false);
     }
