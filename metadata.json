@@ -1,0 +1,6 @@
+{
+  "name": "Tanzania Investment and Procurement Portal",
+  "description": "A minimalist, high-contrast, professional intelligence platform for Tanzanian national investment, projects tracking, legal compliance, and strategic procurement.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
