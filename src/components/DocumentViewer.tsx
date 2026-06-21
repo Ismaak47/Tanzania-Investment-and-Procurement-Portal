@@ -28,7 +28,6 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
     try {
       const element = pdfContentRef.current;
 
-      // Before capturing, manually assign standard value/checked/selected attributes for html2canvas
       const inputs = element.querySelectorAll('input[type="text"], input[type="number"]');
       inputs.forEach((input: any) => {
         input.setAttribute('value', input.value);
@@ -48,8 +47,9 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
         }
       });
 
-      // Filename based on document title
-      const filename = `Tanzania_Investment_and_Procurement_Portal_-_${(doc?.title || 'Document').replace(/[^a-z0-9]/gi, '_')}.pdf`;
+      const docTitle = doc?.title || 'Document';
+      const cleanTitle = docTitle.replace(/[^a-zA-Z0-9 -]/g, '');
+      const filename = `Tanzania-Sovereign-${cleanTitle}.pdf`;
 
       const opt = {
         margin: 10,
@@ -67,7 +67,7 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
 
       await html2pdf().set(opt).from(element).save();
     } catch (error) {
-      console.error('Failed to generate PDF:', error);
+      console.error(error);
     } finally {
       setIsGeneratingPdf(false);
     }
