@@ -63,31 +63,10 @@ export default function App() {
               Sovereign Intelligence
             </span>
           </div>
-          
-          <div className="h-4 w-px bg-zinc-200 hidden sm:block"></div>
-          <span className="text-[10px] font-mono font-medium text-emerald-700 bg-emerald-50/70 border border-emerald-200 px-2 py-0.5 rounded uppercase tracking-wider hidden sm:inline-flex items-center gap-1 shadow-sm">
-            <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse"></span>
-            NE&ST V4 Validated
-          </span>
         </div>
 
         {/* Dynamic header navigation quicklinks / stats index */}
         <div className="flex items-center gap-2 md:gap-4">
-          <button 
-            onClick={() => handleDocSelection(null)}
-            className="text-xs font-semibold text-zinc-500 hover:text-zinc-950 hover:bg-zinc-100 px-2.5 min-h-[44px] md:min-h-0 py-1.5 rounded transition-all cursor-pointer flex items-center justify-center"
-          >
-            Sitemap Index
-          </button>
-          <a
-            href="https://ais-dev-ehwej26ahes2a55uz6rzsk-221392660885.europe-west1.run.app"
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-1 text-xs font-semibold text-zinc-500 hover:text-zinc-950 cursor-pointer min-h-[44px] md:min-h-0 px-2 flex items-center justify-center"
-          >
-            Environment
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </a>
         </div>
       </header>
 
