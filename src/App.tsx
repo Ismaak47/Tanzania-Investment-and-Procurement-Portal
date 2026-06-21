@@ -13,16 +13,33 @@ import DocumentViewer from './components/DocumentViewer';
 export default function App() {
   const [currentDocId, setCurrentDocId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(true);
 
   // Auto scroll to top on document navigation
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [currentDocId]);
 
+  // Handle responsive sidebar defaults isSidebarCollapsed
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsSidebarCollapsed(false);
+      } else {
+        setIsSidebarCollapsed(true);
+      }
+    };
+    handleResize(); // Initial setup
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Synchronize dynamic sitemap searches
   const handleDocSelection = (id: string | null) => {
     setCurrentDocId(id);
+    if (window.innerWidth < 768) {
+      setIsSidebarCollapsed(true);
+    }
   };
 
   return (
@@ -31,15 +48,16 @@ export default function App() {
       {/* Top Professional Header Bar */}
       <header className="h-16 bg-white border-b border-zinc-200 px-4 md:px-6 flex items-center justify-between shrink-0 sticky top-0 z-40 select-none">
         <div className="flex items-center gap-3">
-          {/* Mobile Sidebar Hamburger Trigger */}
+          {/* Mobile Sidebar Hamburger Trigger with 44px Tap Target */}
           <button 
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            className="p-1.5 hover:bg-zinc-100 rounded text-zinc-500 transition-colors md:hidden cursor-pointer"
+            className="h-11 w-11 flex items-center justify-center hover:bg-zinc-100 rounded text-zinc-500 transition-colors md:hidden cursor-pointer"
+            aria-label="Toggle Menu"
           >
             <Menu className="w-5 h-5" />
           </button>
           
-          <div onClick={() => setCurrentDocId(null)} className="flex items-center gap-2 cursor-pointer group">
+          <div onClick={() => handleDocSelection(null)} className="flex items-center gap-2 cursor-pointer group">
             <div className="w-1.5 h-1.5 rounded-full bg-zinc-950"></div>
             <span className="font-display font-medium text-[13px] md:text-sm text-zinc-950 tracking-tight uppercase group-hover:text-zinc-600 transition-colors">
               Sovereign Intelligence
@@ -54,10 +72,10 @@ export default function App() {
         </div>
 
         {/* Dynamic header navigation quicklinks / stats index */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           <button 
             onClick={() => handleDocSelection(null)}
-            className="text-xs font-semibold text-zinc-500 hover:text-zinc-950 hover:bg-zinc-100 px-2.5 py-1.5 rounded transition-all cursor-pointer"
+            className="text-xs font-semibold text-zinc-500 hover:text-zinc-950 hover:bg-zinc-100 px-2.5 min-h-[44px] md:min-h-0 py-1.5 rounded transition-all cursor-pointer flex items-center justify-center"
           >
             Sitemap Index
           </button>
@@ -65,7 +83,7 @@ export default function App() {
             href="https://ais-dev-ehwej26ahes2a55uz6rzsk-221392660885.europe-west1.run.app"
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-1 text-xs font-semibold text-zinc-500 hover:text-zinc-950 cursor-pointer"
+            className="flex items-center gap-1 text-xs font-semibold text-zinc-500 hover:text-zinc-950 cursor-pointer min-h-[44px] md:min-h-0 px-2 flex items-center justify-center"
           >
             Environment
             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -74,8 +92,16 @@ export default function App() {
       </header>
 
       {/* Primary Workspace Panel Body */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden relative">
         
+        {/* Mobile Backdrop Overlay - closes sidebar when clicked */}
+        {!isSidebarCollapsed && (
+          <div 
+            onClick={() => setIsSidebarCollapsed(true)}
+            className="fixed inset-0 bg-black/40 z-40 md:hidden transition-opacity duration-300"
+          />
+        )}
+
         {/* Left Sidebar */}
         <Sidebar 
           currentDocId={currentDocId}

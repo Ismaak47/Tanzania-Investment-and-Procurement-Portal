@@ -32,13 +32,13 @@ export default function DashboardOverview({
     <div className="space-y-8 animate-fade-in">
       
       {/* Title Hero Banner Section */}
-      <div className="bg-white border border-zinc-200 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+      <div className="bg-white border border-zinc-200 rounded-2xl p-4 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
         <div className="space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-zinc-100 border border-zinc-200 text-[10px] font-mono font-semibold tracking-wider text-zinc-600">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-zinc-100 border border-zinc-200 text-xs md:text-[10px] font-mono font-semibold tracking-wider text-zinc-600">
             <span className="w-1.5 h-1.5 rounded-full bg-zinc-900 animate-pulse"></span>
             SOVEREIGN PLATFORM 2026 / 2027
           </div>
-          <h1 className="text-2xl md:text-3xl font-display font-bold text-zinc-950 tracking-tight leading-none">
+          <h1 className="text-2xl md:text-3xl font-display font-bold text-zinc-950 tracking-tight leading-tight md:leading-none">
             Tanzania National Investment & Procurement Platform
           </h1>
           <p className="text-sm text-zinc-500 leading-relaxed max-w-2xl">
@@ -47,25 +47,25 @@ export default function DashboardOverview({
         </div>
 
         {/* Highlight Stats Pill */}
-        <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-4 flex gap-4 text-xs font-mono shrink-0">
+        <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-4 flex gap-4 text-xs font-mono w-full md:w-auto justify-around md:justify-start shrink-0">
           <div>
-            <span className="text-zinc-400 block text-[10px] uppercase">Active Pipeline</span>
-            <strong className="text-sm font-bold text-zinc-900">$74.1 Billion</strong>
+            <span className="text-zinc-400 block text-xs md:text-[10px] uppercase">Active Pipeline</span>
+            <strong className="text-sm font-bold text-zinc-900 block">$74.1 Billion</strong>
           </div>
           <div className="w-px bg-zinc-200 h-8 self-center"></div>
           <div>
-            <span className="text-zinc-400 block text-[10px] uppercase">Checkpoints</span>
-            <strong className="text-sm font-bold text-emerald-700">33 Portals Clear</strong>
+            <span className="text-zinc-400 block text-xs md:text-[10px] uppercase">Checkpoints</span>
+            <strong className="text-sm font-bold text-emerald-700 block">33 Portals Clear</strong>
           </div>
         </div>
       </div>
 
       {/* Categories Filter Hub Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-200 pb-4">
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => setSelectedCategory('all')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold tracking-tight transition-all duration-200 cursor-pointer ${
+            className={`px-3 py-1.5 min-h-[44px] md:min-h-0 rounded-lg text-xs font-semibold tracking-tight transition-all duration-200 cursor-pointer flex items-center justify-center ${
               selectedCategory === 'all' 
                 ? 'bg-zinc-950 text-white shadow-sm' 
                 : 'bg-white border border-zinc-200 text-zinc-600 hover:text-zinc-900 hover:border-zinc-300'
@@ -78,7 +78,7 @@ export default function DashboardOverview({
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold tracking-tight transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 min-h-[44px] md:min-h-0 rounded-lg text-xs font-semibold tracking-tight transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 ${
                 selectedCategory === category.id 
                   ? 'bg-zinc-900 text-white shadow-sm' 
                   : 'bg-white border border-zinc-200 text-zinc-600 hover:text-zinc-900 hover:border-zinc-300'
@@ -91,14 +91,14 @@ export default function DashboardOverview({
         </div>
 
         {/* Inner Search Box */}
-        <div className="relative w-full max-w-xs">
+        <div className="relative w-full md:max-w-xs">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 stroke-2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchQueryChange(e.target.value)}
             placeholder="Search keywords or sectors..."
-            className="w-full bg-white border border-zinc-200 rounded-xl pl-9 pr-3 py-1.5 text-xs text-zinc-800 outline-none focus:border-zinc-900 focus:bg-white transition-all duration-150 shadow-sm"
+            className="w-full bg-white border border-zinc-200 rounded-xl pl-9 pr-3 py-2 md:py-1.5 text-base md:text-xs text-zinc-800 outline-none focus:border-zinc-900 focus:bg-white transition-all duration-150 shadow-sm min-h-[44px] md:min-h-0"
           />
         </div>
       </div>
@@ -112,15 +112,15 @@ export default function DashboardOverview({
               <div 
                 key={doc.id}
                 onClick={() => onSelectDoc(doc.id)}
-                className="bg-white border border-zinc-200 hover:border-zinc-900/40 rounded-xl p-5 cursor-pointer flex flex-col justify-between hover:shadow-[0_4px_12px_rgba(0,0,0,0.03)] transition-all duration-200 select-none group"
+                className="bg-white border border-zinc-200 hover:border-zinc-900/40 rounded-xl p-5 cursor-pointer flex flex-col justify-between hover:shadow-[0_4px_12px_rgba(0,0,0,0.03)] transition-all duration-200 select-none group min-h-[140px]"
               >
                 <div className="space-y-2">
                   <div className="flex justify-between items-start gap-4">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-zinc-100 group-hover:bg-zinc-900 group-hover:text-white rounded text-[10px] font-mono font-bold text-zinc-500 transition-colors">
+                    <span className="inline-flex items-center justify-center w-6 h-6 bg-zinc-100 group-hover:bg-zinc-900 group-hover:text-white rounded text-xs md:text-[10px] font-mono font-bold text-zinc-500 transition-colors">
                       {doc.number}
                     </span>
                     {cat && (
-                      <span className={`px-2 py-0.5 bg-zinc-50 border border-zinc-200 text-[9px] font-mono tracking-wider font-semibold uppercase rounded text-zinc-500`}>
+                      <span className={`px-2 py-0.5 bg-zinc-50 border border-zinc-200 text-xs md:text-[9px] font-mono tracking-wider font-semibold uppercase rounded text-zinc-500`}>
                         {cat.title.split(' ')[0]}
                       </span>
                     )}
@@ -134,7 +134,7 @@ export default function DashboardOverview({
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-zinc-400 pt-3 border-t border-zinc-50 mt-4 font-semibold group-hover:text-zinc-900 transition-colors">
+                <div className="flex items-center justify-between text-xs md:text-[11px] text-zinc-400 pt-3 border-t border-zinc-50 mt-4 font-semibold group-hover:text-zinc-900 transition-colors">
                   <span className="font-mono">PORTAL_Z_0{doc.number}</span>
                   <span className="flex items-center gap-0.5">
                     Launch workspace

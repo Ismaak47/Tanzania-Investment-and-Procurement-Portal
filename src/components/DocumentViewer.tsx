@@ -177,14 +177,14 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
             {doc.title}
           </h1>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-white border border-zinc-200 text-xs font-mono text-zinc-600">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-white border border-zinc-200 text-xs font-mono text-zinc-600 min-h-[44px] md:min-h-0">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
             ACTIVE DEPLOYMENT
           </span>
           <button 
             onClick={() => window.print()}
-            className="px-3 py-1 bg-zinc-900 text-white hover:bg-zinc-800 rounded font-mono text-xs font-medium cursor-pointer transition-colors"
+            className="px-3 py-2 md:py-1 bg-zinc-900 text-white hover:bg-zinc-800 rounded font-mono text-xs font-medium cursor-pointer transition-colors min-h-[44px] md:min-h-0 flex items-center justify-center"
           >
             Export PDF
           </button>
@@ -511,7 +511,7 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
                   <select 
                     value={invSector} 
                     onChange={(e) => setInvSector(e.target.value)}
-                    className="w-full bg-white border border-zinc-200 rounded px-2.5 py-1 text-xs text-zinc-800 outline-none focus:border-zinc-900"
+                    className="w-full bg-white border border-zinc-200 rounded px-2.5 py-2.5 md:py-1 text-base md:text-xs text-zinc-800 outline-none focus:border-zinc-900 min-h-[44px] md:min-h-0"
                   >
                     <option value="energy">Hydrocarbons & Midstream LNG</option>
                     <option value="nuclear">Uranium / Nuclear Fuel Cycle</option>
@@ -611,12 +611,12 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
               <p className="text-xs text-zinc-500">Select your country representation to load the optimal regulatory registration sequence.</p>
               
               <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-1">
+                <div className="space-y-1 w-full">
                   <label className="text-xs font-mono font-bold text-zinc-500 uppercase">Country Origin of Firm</label>
                   <select 
                     value={investorOrigin} 
                     onChange={(e) => setInvestorOrigin(e.target.value)}
-                    className="w-full bg-white border border-zinc-200 rounded p-2 text-xs text-zinc-800 focus:border-zinc-900 outline-none"
+                    className="w-full bg-white border border-zinc-200 rounded p-2.5 md:p-2 text-base md:text-xs text-zinc-800 focus:border-zinc-900 outline-none min-h-[44px] md:min-h-0"
                   >
                     <option value="gulf">Middle East (Gulf Co-operation Councils)</option>
                     <option value="ru">Russian Federation (Bilateral Corridors)</option>
@@ -826,11 +826,11 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
               <h3 className="font-display font-semibold text-zinc-900 text-sm">Sovereign Investment Priority Selector</h3>
               <p className="text-xs text-zinc-500">Select an opportunity category to view governmental backing metrics and expected IRR levels.</p>
               
-              <div className="max-w-xs">
+              <div className="w-full md:max-w-xs">
                 <select 
                   value={oppSector} 
                   onChange={(e) => setOppSector(e.target.value)}
-                  className="w-full bg-white border border-zinc-200 rounded p-2 text-xs font-semibold text-zinc-900 outline-none focus:border-zinc-950"
+                  className="w-full bg-white border border-zinc-200 rounded p-2.5 md:p-2 text-base md:text-xs font-semibold text-zinc-900 outline-none focus:border-zinc-950 min-h-[44px] md:min-h-0"
                 >
                   <option value="lng">LNG Liquid Extraction & Export Line</option>
                   <option value="uranium">Uranium Heavy Extraction Projects</option>
@@ -880,11 +880,11 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
             <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-5 space-y-4">
               <h3 className="font-display font-semibold text-zinc-900 text-sm">Auxiliary Plant and Equipment specs matcher</h3>
               
-              <div className="max-w-xs">
+              <div className="w-full md:max-w-xs">
                 <select 
                   value={scProject} 
                   onChange={(e) => setScProject(e.target.value)}
-                  className="w-full bg-white border border-zinc-200 rounded p-2 text-xs font-semibold text-zinc-900 outline-none focus:border-zinc-950"
+                  className="w-full bg-white border border-zinc-200 rounded p-2.5 md:p-2 text-base md:text-xs font-semibold text-zinc-900 outline-none focus:border-zinc-950 min-h-[44px] md:min-h-0"
                 >
                   <option value="lng">Lindi LNG processing terminals</option>
                   <option value="sgr">SGR Electrified Heavy transport rails</option>
@@ -1062,11 +1062,11 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
               <h3 className="font-display font-semibold text-zinc-950 text-sm">Regulatory inter-agency directory</h3>
               <p className="text-xs text-zinc-500">Select any state organ node to check its primary mandate and interlinking compliance routes.</p>
               
-              <div className="max-w-xs">
+              <div className="w-full md:max-w-xs">
                 <select 
                   value={activeStakeholder}
                   onChange={(e) => setActiveStakeholder(e.target.value)}
-                  className="w-full bg-white border border-zinc-200 rounded p-2 text-xs font-semibold text-zinc-900 focus:border-zinc-950 outline-none"
+                  className="w-full bg-white border border-zinc-200 rounded p-2.5 md:p-2 text-base md:text-xs font-semibold text-zinc-900 focus:border-zinc-950 outline-none min-h-[44px] md:min-h-0"
                 >
                   <option value="ewura">EWURA (Energy & Water Regulatory Authority)</option>
                   <option value="tpdc">TPDC (Tanzania Petroleum Develop Corp)</option>
@@ -1125,7 +1125,7 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
                   <select 
                     value={investorOrigin} 
                     onChange={(e) => setInvestorOrigin(e.target.value)}
-                    className="w-full bg-white border border-zinc-200 rounded p-2 text-xs text-zinc-900 focus:border-zinc-950 outline-none"
+                    className="w-full bg-white border border-zinc-200 rounded p-2.5 md:p-2 text-base md:text-xs text-zinc-900 focus:border-zinc-950 outline-none min-h-[44px] md:min-h-0"
                   >
                     <option value="gulf">Middle East/Gulf Sovereign Groups</option>
                     <option value="ru">Russian heavy extractive SOEs</option>
@@ -1139,7 +1139,7 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
                   <select 
                     value={partnerProject} 
                     onChange={(e) => setPartnerProject(e.target.value)}
-                    className="w-full bg-white border border-zinc-200 rounded p-2 text-xs text-zinc-900 focus:border-zinc-950 outline-none"
+                    className="w-full bg-white border border-zinc-200 rounded p-2.5 md:p-2 text-base md:text-xs text-zinc-900 focus:border-zinc-950 outline-none min-h-[44px] md:min-h-0"
                   >
                     <option value="lng">LNG Maritime Terminals & Pipelaying</option>
                     <option value="nuclear">Uranium extraction operations</option>
@@ -1236,11 +1236,11 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
               <h3 className="font-display font-semibold text-zinc-900 text-sm">Multilateral path precondition checker</h3>
               <p className="text-xs text-zinc-500">Select any DFI entity to review compliance preconditions regarding project loans.</p>
 
-              <div className="max-w-xs">
+              <div className="w-full md:max-w-xs">
                 <select 
                   value={activeDfi} 
                   onChange={(e) => setActiveDfi(e.target.value)}
-                  className="w-full bg-white border border-zinc-200 rounded p-2 text-xs font-semibold text-zinc-900 focus:border-zinc-950 outline-none"
+                  className="w-full bg-white border border-zinc-200 rounded p-2.5 md:p-2 text-base md:text-xs font-semibold text-zinc-900 focus:border-zinc-950 outline-none min-h-[44px] md:min-h-0"
                 >
                   <option value="ifc">IFC (International Finance Corporation)</option>
                   <option value="afdb">AfDB (African Development Bank)</option>
@@ -1344,22 +1344,22 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
               </div>
 
               {/* Presets and entry quick queries */}
-              <div className="p-3 border-t border-zinc-100 bg-zinc-50/50 flex flex-wrap gap-1.5">
+              <div className="p-3 border-t border-zinc-100 bg-zinc-50/50 flex flex-wrap gap-2">
                 <button 
                   onClick={() => triggerAdvisorSample('entry', 'How do I center target registrations to enter the market?')}
-                  className="px-2 py-1 bg-white hover:bg-zinc-100 text-[10px] text-zinc-700 border border-zinc-200 rounded cursor-pointer transition-colors"
+                  className="px-2.5 py-2 md:py-1 bg-white hover:bg-zinc-100 text-xs text-zinc-700 border border-zinc-200 rounded cursor-pointer transition-colors min-h-[44px] md:min-h-0 flex items-center justify-center font-medium"
                 >
                   TIC Licenses
                 </button>
                 <button 
                   onClick={() => triggerAdvisorSample('jv', 'What are the rules regarding PURA Joint Ventures?')}
-                  className="px-2 py-1 bg-white hover:bg-zinc-100 text-[10px] text-zinc-700 border border-zinc-200 rounded cursor-pointer transition-colors"
+                  className="px-2.5 py-2 md:py-1 bg-white hover:bg-zinc-100 text-xs text-zinc-700 border border-zinc-200 rounded cursor-pointer transition-colors min-h-[44px] md:min-h-0 flex items-center justify-center font-medium"
                 >
                   PURA Joint Ventures
                 </button>
                 <button 
                   onClick={() => triggerAdvisorSample('bid', 'How are bid security bonds validated?')}
-                  className="px-2 py-1 bg-white hover:bg-zinc-100 text-[10px] text-zinc-700 border border-zinc-200 rounded cursor-pointer transition-colors"
+                  className="px-2.5 py-2 md:py-1 bg-white hover:bg-zinc-100 text-xs text-zinc-700 border border-zinc-200 rounded cursor-pointer transition-colors min-h-[44px] md:min-h-0 flex items-center justify-center font-medium"
                 >
                   NeST Bid Securities
                 </button>
@@ -1372,11 +1372,11 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
                   placeholder="Ask advisor (e.g., minimum capital, tax reliefs)..."
-                  className="flex-1 bg-zinc-50 border border-zinc-200 rounded px-3 py-1.5 text-xs text-zinc-800 outline-none focus:bg-white focus:border-zinc-900"
+                  className="flex-1 bg-zinc-50 border border-zinc-200 rounded px-3 py-2 md:py-1.5 text-base md:text-xs text-zinc-800 outline-none focus:bg-white focus:border-zinc-900 min-h-[44px] md:min-h-0"
                 />
                 <button 
                   type="submit"
-                  className="px-3 py-1.5 bg-zinc-900 text-white text-xs font-mono font-bold rounded hover:bg-zinc-800 transition-colors cursor-pointer"
+                  className="px-4 py-2 md:py-1.5 bg-zinc-900 text-white text-base md:text-xs font-mono font-bold rounded hover:bg-zinc-800 transition-colors cursor-pointer min-h-[44px] md:min-h-0 flex items-center justify-center"
                 >
                   SEND
                 </button>
@@ -1440,19 +1440,19 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
               </div>
 
               {/* Calculated Results Grid */}
-              <div className="grid grid-cols-3 gap-2 py-3 border-t border-b border-zinc-200">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-3 border-t border-b border-zinc-200">
                 <div className="text-center p-2">
-                  <span className="text-[10px] font-mono font-bold text-zinc-400 block uppercase">Attractiveness</span>
+                  <span className="text-xs md:text-[10px] font-mono font-bold text-zinc-400 block uppercase">Attractiveness</span>
                   <span className="text-xl font-mono font-bold text-zinc-950 block">{dseResult.attractiveness}%</span>
                 </div>
-                <div className="text-center p-2 border-l border-r border-zinc-200">
-                  <span className="text-[10px] font-mono font-bold text-zinc-400 block uppercase">NeST Readiness</span>
+                <div className="text-center p-2 border-y sm:border-y-0 sm:border-l sm:border-r border-zinc-200">
+                  <span className="text-xs md:text-[10px] font-mono font-bold text-zinc-400 block uppercase">NeST Readiness</span>
                   <span className={`text-xl font-mono font-bold block ${dseResult.readiness >= 80 ? 'text-emerald-700' : 'text-rose-700'}`}>
                     {dseResult.readiness}%
                   </span>
                 </div>
                 <div className="text-center p-2">
-                  <span className="text-[10px] font-mono font-bold text-zinc-400 block uppercase">Sovereign Risk</span>
+                  <span className="text-xs md:text-[10px] font-mono font-bold text-zinc-400 block uppercase">Sovereign Risk</span>
                   <span className={`text-xl font-mono font-bold block ${dseResult.risk <= 50 ? 'text-emerald-700' : 'text-amber-700'}`}>
                     {dseResult.risk}%
                   </span>

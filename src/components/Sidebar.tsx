@@ -50,9 +50,9 @@ export default function Sidebar({
 
   return (
     <aside 
-      className={`bg-white border-r border-zinc-200 flex flex-col justify-between transition-all duration-300 h-full overflow-hidden ${
-        isCollapsed ? 'w-16' : 'w-72 md:w-[280px]'
-      }`}
+      className={`bg-white border-r border-zinc-200 flex flex-col justify-between transition-all duration-300 h-full overflow-hidden 
+        fixed inset-y-0 left-0 z-50 md:relative 
+        ${isCollapsed ? '-translate-x-full md:translate-x-0 w-72 md:w-16' : 'translate-x-0 w-72 md:w-[280px]'}`}
     >
       <div className="flex flex-col flex-1 overflow-hidden">
         
@@ -95,6 +95,17 @@ export default function Sidebar({
           >
             <ChevronRight className={`w-4 h-4 transform transition-transform duration-300 ${isCollapsed ? '' : 'rotate-180'}`} />
           </button>
+
+          {/* Mobile Close Button with 44px tap target */}
+          {!isCollapsed && (
+            <button 
+              onClick={onToggleCollapse}
+              className="h-11 w-11 flex items-center justify-center text-zinc-400 hover:text-zinc-850 hover:bg-zinc-100 rounded transition-colors md:hidden cursor-pointer"
+              title="Close Sidebar"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
         </div>
 
         {/* Global Directory Search Bar - Visible when expanded */}
