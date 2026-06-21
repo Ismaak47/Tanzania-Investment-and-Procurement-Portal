@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+// @ts-ignore
+import html2pdf from 'html2pdf.js';
 import { 
   FileText, CheckCircle, ExternalLink, ShieldCheck, 
   TrendingUp, MapPin, Brain, BarChart3, ArrowRight, 
@@ -15,6 +17,61 @@ interface DocumentViewerProps {
 export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewerProps) {
   // Find current doc info
   const doc = DOCUMENTS.find(d => d.id === docId);
+
+  const pdfContentRef = useRef<HTMLDivElement>(null);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState<boolean>(false);
+
+  const handleExportPdf = async () => {
+    if (!pdfContentRef.current || isGeneratingPdf) return;
+    setIsGeneratingPdf(true);
+
+    try {
+      const element = pdfContentRef.current;
+
+      // Before capturing, manually assign standard value/checked/selected attributes for html2canvas
+      const inputs = element.querySelectorAll('input[type="text"], input[type="number"]');
+      inputs.forEach((input: any) => {
+        input.setAttribute('value', input.value);
+      });
+
+      const textareas = element.querySelectorAll('textarea');
+      textareas.forEach((textarea: any) => {
+        textarea.textContent = textarea.value;
+      });
+
+      const selects = element.querySelectorAll('select');
+      selects.forEach((select: any) => {
+        const selectedOption = select.options[select.selectedIndex];
+        if (selectedOption) {
+          Array.from(select.options).forEach((opt: any) => opt.removeAttribute('selected'));
+          selectedOption.setAttribute('selected', 'selected');
+        }
+      });
+
+      // Filename based on document title
+      const filename = `Tanzania_Investment_and_Procurement_Portal_-_${(doc?.title || 'Document').replace(/[^a-z0-9]/gi, '_')}.pdf`;
+
+      const opt = {
+        margin: 10,
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          scrollY: 0,
+          scrollX: 0
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      } as any;
+
+      await html2pdf().set(opt).from(element).save();
+    } catch (error) {
+      console.error('Failed to generate PDF:', error);
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
 
   // States for interactive widgets
   // Document 5 & 6 & 8 & 10: Checklists state
@@ -160,7 +217,7 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
   const dseResult = calcDSEScores();
 
   return (
-    <div className="bg-white border border-zinc-200 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.05)] overflow-hidden">
+    <div ref={pdfContentRef} className="bg-white border border-zinc-200 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.05)] overflow-hidden">
       
       {/* Document Breadcrumb & Header */}
       <div className="border-b border-zinc-200 bg-zinc-50/50 px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -177,16 +234,17 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
             {doc.title}
           </h1>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2" data-html2pdf-ignore="true">
           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-white border border-zinc-200 text-xs font-mono text-zinc-600 min-h-[44px] md:min-h-0">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
             ACTIVE DEPLOYMENT
           </span>
           <button 
-            onClick={() => window.print()}
-            className="px-3 py-2 md:py-1 bg-zinc-900 text-white hover:bg-zinc-800 rounded font-mono text-xs font-medium cursor-pointer transition-colors min-h-[44px] md:min-h-0 flex items-center justify-center"
+            onClick={handleExportPdf}
+            disabled={isGeneratingPdf}
+            className="px-3 py-2 md:py-1 bg-zinc-900 text-white hover:bg-zinc-800 rounded font-mono text-xs font-medium cursor-pointer transition-colors min-h-[44px] md:min-h-0 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Export PDF
+            {isGeneratingPdf ? 'Generating PDF...' : 'Export PDF'}
           </button>
         </div>
       </div>
@@ -1582,7 +1640,7 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
         )}
 
         {/* Universal Section: Multi-Document Next Navigation */}
-        <div className="mt-12 pt-6 border-t border-zinc-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="mt-12 pt-6 border-t border-zinc-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4" data-html2pdf-ignore="true">
           <button 
             onClick={() => {
               const currentIdx = DOCUMENTS.findIndex(d => d.id === docId);
