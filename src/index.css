@@ -33,3 +33,24 @@ body {
   background: #d4d4d8;
 }
 
+@media print {
+  aside,
+  header,
+  footer,
+  button,
+  select,
+  input,
+  textarea,
+  [data-html2pdf-ignore="true"] {
+    display: none !important;
+  }
+  body,
+  main {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+

@@ -52,7 +52,7 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
       const filename = `Tanzania-Sovereign-${cleanTitle}.pdf`;
 
       const opt = {
-        margin: 10,
+        margin: 0.5,
         filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
@@ -62,7 +62,7 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
           scrollY: 0,
           scrollX: 0
         },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
       } as any;
 
       await html2pdf().set(opt).from(element).save();
@@ -217,7 +217,7 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
   const dseResult = calcDSEScores();
 
   return (
-    <div ref={pdfContentRef} className="bg-white border border-zinc-200 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.05)] overflow-hidden">
+    <div className="bg-white border border-zinc-200 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.05)] overflow-hidden">
       
       {/* Document Breadcrumb & Header */}
       <div className="border-b border-zinc-200 bg-zinc-50/50 px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -250,7 +250,7 @@ export default function DocumentViewer({ docId, onNavigateToDoc }: DocumentViewe
       </div>
 
       {/* Main Workspace Frame */}
-      <div className="p-6 md:p-8">
+      <div ref={pdfContentRef} className="p-6 md:p-8">
         
         {/* Short Executive Abstract */}
         <p className="text-sm md:text-base text-zinc-500 font-normal leading-relaxed mb-6 italic max-w-3xl">
