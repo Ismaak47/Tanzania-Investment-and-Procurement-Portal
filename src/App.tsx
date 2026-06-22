@@ -119,11 +119,10 @@ export default function App() {
       <footer className="h-10 bg-white border-t border-zinc-200 px-4 md:px-6 flex items-center justify-between text-[11px] text-zinc-400 font-mono select-none shrink-0">
         <button 
           onClick={() => setIsSettingsOpen(true)}
-          className="flex items-center gap-1.5 hover:text-zinc-800 text-zinc-500 transition-colors cursor-pointer select-none"
+          className="flex items-center justify-center p-1.5 hover:text-zinc-800 text-zinc-500 hover:bg-zinc-50 rounded-lg transition-colors cursor-pointer select-none"
           title="Open Portal Settings"
         >
-          <Settings className="w-3.5 h-3.5 animate-pulse" />
-          <span>PORTAL CONFIG ({clearanceLevel})</span>
+          <Settings className="w-4 h-4 animate-pulse" />
         </button>
         <span className="text-zinc-500 font-sans tracking-tight">© 2026 written by Ismail Hakim</span>
       </footer>
