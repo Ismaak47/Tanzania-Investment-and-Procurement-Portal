@@ -27,13 +27,34 @@ async function startServer() {
         return;
       }
 
-      const contents = messages.map((m: any) => ({
-        role: m.sender === 'user' ? 'user' : 'model',
-        parts: [{ text: m.text }]
-      }));
+      // 1. Find the first user message. Conversation sent to Gemini must start with a 'user' message.
+      const firstUserIndex = messages.findIndex((m: any) => m.sender === 'user');
+      const apiMessages = firstUserIndex !== -1 ? messages.slice(firstUserIndex) : [];
+
+      if (apiMessages.length === 0) {
+        res.json({ text: "Please enter a question to start the compliance analysis.", reply: "Please enter a question to start the compliance analysis." });
+        return;
+      }
+
+      // 2. Map and group consecutive messages of the same role to strictly alternate user/model
+      const contents: any[] = [];
+      for (const m of apiMessages) {
+        const role = m.sender === 'user' ? 'user' : 'model';
+        const text = m.text || '';
+        
+        if (contents.length > 0 && contents[contents.length - 1].role === role) {
+          // Merge consecutive messages from the same sender
+          contents[contents.length - 1].parts[0].text += "\n" + text;
+        } else {
+          contents.push({
+            role,
+            parts: [{ text }]
+          });
+        }
+      }
 
       const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
+        model: "gemini-3.5-flash",
         contents,
         config: {
           systemInstruction: "You are a sovereign compliance advisor for the Tanzania Investment and Procurement Portal. Answer questions about Tanzanian investment law, procurement regulations (CAP 410), tax incentives, SEZ/EPZ rules, local content requirements, and market entry pathways. Be concise, structured, and cite specific regulatory references. Keep responses under 200 words.",
